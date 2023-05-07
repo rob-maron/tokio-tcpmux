@@ -1,9 +1,11 @@
 pub mod macros;
 pub mod errors;
-pub mod mux;
+mod mux;
 mod messages;
 mod muxstream;
 mod state;
+
+pub use mux::*;
 
 use mimalloc::MiMalloc;
 
