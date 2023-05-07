@@ -1,0 +1,15 @@
+[package]
+name = "tokio-smux"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+tokio = { version = "1.27.0", features = ["full"] }
+bytes = "1.4.0"
+bitfield = "0.14.0"
+parking_lot = "0.12.1"
+dashmap = "5.4.0"
+tracing = "0.1.37"
+mimalloc = { version = "*", default-features = false }

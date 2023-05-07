@@ -1,0 +1,28 @@
+[package]
+name = "benches"
+version = "0.0.0"
+publish = false
+edition = "2018"
+
+[dependencies]
+tokio = { version = "1.27.0", features = ["full"] }
+tokio-smux = { path = "../" }
+futures = "0.3.28"
+rand = "0.8.5"
+tracing-subscriber = "0.3.17"
+
+[dev-dependencies]
+bencher = "0.1.5"
+
+[[bench]]
+name = "transfer"
+path = "transfer.rs"
+harness = false
+
+[profile.release]
+strip = true
+lto = true
+panic = "abort"
+codegen-units = 1
+
+[profile.bench]
