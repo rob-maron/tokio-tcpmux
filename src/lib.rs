@@ -6,6 +6,7 @@ mod muxstream;
 mod state;
 
 pub use mux::*;
+pub use muxstream::*;
 
 use mimalloc::MiMalloc;
 

@@ -1,15 +1,11 @@
 use bencher::{Bencher, benchmark_group, benchmark_main};
 
-use rand::Rng;
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::{TcpListener, TcpStream};
+use tokio_smux::{MuxStream, Mux};
 
-#[tokio::main]
 async fn roundtrip_raw(){
-    let mut rng = rand::thread_rng();
-    let port = rng.gen_range(8000..9000);
-
-    let listener = TcpListener::bind(format!("127.0.0.1:{}", port)).await.unwrap();
+    let listener = TcpListener::bind("127.0.0.1:8080").await.unwrap();
 
     let peer1 = tokio::spawn(async move {
         let (mut conn, _) = listener.accept().await.unwrap();
@@ -19,7 +15,7 @@ async fn roundtrip_raw(){
     });
 
     let peer2 = tokio::spawn(async move {
-        let mut conn = TcpStream::connect(format!("127.0.0.1:{}", port)).await.unwrap();
+        let mut conn = TcpStream::connect("127.0.0.1:8080").await.unwrap();
 
         assert_eq!(conn.read_u64().await.unwrap(), 1);
         conn.write_u64(2).await.unwrap();
@@ -30,7 +26,6 @@ async fn roundtrip_raw(){
     peer2.await.unwrap();
 }
 
-#[tokio::main]
 async fn roundtrip_mux(){
     let listener = TcpListener::bind("127.0.0.1:8080").await.unwrap();
 
@@ -57,7 +52,6 @@ async fn roundtrip_mux(){
     _ = peer2.await;
 }
 
-#[tokio::main]
 async fn transfer_mux() {
     let listener = TcpListener::bind("127.0.0.1:8080").await.unwrap();
 
@@ -67,7 +61,7 @@ async fn transfer_mux() {
         let mut stream = conn.accept().await.unwrap();
         let mut buf = [0u8; 8092];
         let mut total = 0;
-        while total < 1024 * 1024 * 256 {
+        while total < 1024 * 1024 * 1024 {
             let n = stream.read(&mut buf).await.unwrap();
             total += n;
         }
@@ -80,7 +74,7 @@ async fn transfer_mux() {
         let mut stream = conn.connect().await.unwrap();
         let mut buf = [0u8; 8092];
         let mut total = 0;
-        while total < 1024 * 1024 * 256 {
+        while total < 1024 * 1024 * 1024 {
             let n = stream.write(&mut buf).await.unwrap();
             total += n;
         }
@@ -91,7 +85,6 @@ async fn transfer_mux() {
     _ = write_handle.await;
 }
 
-#[tokio::main]
 async fn transfer_raw() {
     let listener = TcpListener::bind("127.0.0.1:8080").await.unwrap();
 
@@ -99,7 +92,7 @@ async fn transfer_raw() {
         let (mut conn, _) = listener.accept().await.unwrap();
         let mut buf = [0u8; 8092];
         let mut total = 0;
-        while total < 1024 * 1024 * 256 {
+        while total < 1024 * 1024 * 1024 {
         let n = conn.read(&mut buf).await.unwrap();
             total += n;
         }
@@ -111,7 +104,7 @@ async fn transfer_raw() {
 
         let mut buf = [0u8; 8092];
         let mut total = 0;
-        while total < 1024 * 1024 * 256 {
+        while total < 1024 * 1024 * 1024 {
             let n = conn.write(&mut buf).await.unwrap();
             total += n;
         }
@@ -122,27 +115,32 @@ async fn transfer_raw() {
     _ = write_handle.await;
 }
 
+
 fn bench_roundtrip_raw(b: &mut Bencher){
+    let rt = tokio::runtime::Runtime::new().unwrap();
     b.iter(|| {
-        roundtrip_raw();
+        rt.block_on(roundtrip_raw());
     })
 }
 
 fn bench_roundtrip_mux(b: &mut Bencher){
+    let rt = tokio::runtime::Runtime::new().unwrap();
     b.iter(|| {
-        roundtrip_mux();
+        rt.block_on(roundtrip_mux());
     })
 }
 
 fn bench_transfer_raw(b: &mut Bencher){
+    let rt = tokio::runtime::Runtime::new().unwrap();
     b.iter(|| {
-        transfer_raw();
+        rt.block_on(transfer_raw());
     })
 }
 
 fn bench_transfer_mux(b: &mut Bencher){
+    let rt = tokio::runtime::Runtime::new().unwrap();
     b.iter(|| {
-        transfer_mux();
+        rt.block_on(transfer_mux());
     })
 }
 
