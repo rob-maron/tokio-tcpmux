@@ -1,9 +1,10 @@
 use bencher::{Bencher, benchmark_group, benchmark_main};
 
+use futures::executor::block_on;
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::{TcpListener, TcpStream};
-use tokio_smux::{MuxStream, Mux};
 
+#[tokio::main]
 async fn roundtrip_raw(){
     let listener = TcpListener::bind("127.0.0.1:8080").await.unwrap();
 
@@ -26,6 +27,7 @@ async fn roundtrip_raw(){
     peer2.await.unwrap();
 }
 
+#[tokio::main]
 async fn roundtrip_mux(){
     let listener = TcpListener::bind("127.0.0.1:8080").await.unwrap();
 
@@ -52,6 +54,7 @@ async fn roundtrip_mux(){
     _ = peer2.await;
 }
 
+#[tokio::main]
 async fn transfer_mux() {
     let listener = TcpListener::bind("127.0.0.1:8080").await.unwrap();
 
@@ -85,6 +88,7 @@ async fn transfer_mux() {
     _ = write_handle.await;
 }
 
+#[tokio::main]
 async fn transfer_raw() {
     let listener = TcpListener::bind("127.0.0.1:8080").await.unwrap();
 
@@ -115,32 +119,27 @@ async fn transfer_raw() {
     _ = write_handle.await;
 }
 
-
 fn bench_roundtrip_raw(b: &mut Bencher){
-    let rt = tokio::runtime::Runtime::new().unwrap();
     b.iter(|| {
-        rt.block_on(roundtrip_raw());
+        roundtrip_raw();
     })
 }
 
 fn bench_roundtrip_mux(b: &mut Bencher){
-    let rt = tokio::runtime::Runtime::new().unwrap();
     b.iter(|| {
-        rt.block_on(roundtrip_mux());
+        roundtrip_mux();
     })
 }
 
 fn bench_transfer_raw(b: &mut Bencher){
-    let rt = tokio::runtime::Runtime::new().unwrap();
     b.iter(|| {
-        rt.block_on(transfer_raw());
+        transfer_raw();
     })
 }
 
 fn bench_transfer_mux(b: &mut Bencher){
-    let rt = tokio::runtime::Runtime::new().unwrap();
     b.iter(|| {
-        rt.block_on(transfer_mux());
+        transfer_mux();
     })
 }
 
