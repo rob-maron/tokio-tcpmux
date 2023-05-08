@@ -1,6 +1,5 @@
 use bencher::{Bencher, benchmark_group, benchmark_main};
 
-use futures::executor::block_on;
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::{TcpListener, TcpStream};
 
