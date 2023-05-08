@@ -6,7 +6,7 @@ edition = "2018"
 
 [dependencies]
 tokio = { version = "1.27.0", features = ["full"] }
-tokio-smux = { path = "../" }
+tokio-tcpmux = { path = "../" }
 futures = "0.3.28"
 rand = "0.8.5"
 tracing-subscriber = "0.3.17"
@@ -26,3 +26,6 @@ panic = "abort"
 codegen-units = 1
 
 [profile.bench]
+strip = true
+lto = true
+codegen-units = 1

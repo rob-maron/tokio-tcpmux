@@ -1,5 +1,5 @@
 [package]
-name = "tokio-smux"
+name = "tokio-tcpmux"
 version = "0.1.0"
 edition = "2021"
 
