@@ -21,7 +21,7 @@ impl Drop for MuxStream {
         let mut buf = BytesMut::with_capacity(8);
         buf.put_u64(Header::new(ControlMessage::Close, self.stream_id, 0).0);
 
-        self.outbound_sender.send(buf.freeze()).unwrap();
+        self.outbound_sender.send(buf.freeze());
     }
 }
 

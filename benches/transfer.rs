@@ -32,7 +32,7 @@ async fn roundtrip_mux(){
 
     let peer1 = tokio::spawn(async move {
         let (conn, _) = listener.accept().await.unwrap();
-        let mux = tokio_tcpmux::Mux::new(conn, tokio_tcpmux::Config::new(1, 1, 16192 as usize));
+        let mut mux = tokio_tcpmux::Mux::new(conn, tokio_tcpmux::Config::new(1, 1, 16192 as usize));
         let mut conn = mux.accept().await.unwrap();
         
         conn.write_u64(1).await.unwrap();
@@ -59,7 +59,7 @@ async fn transfer_mux() {
 
     let read_handle = tokio::spawn(async move {
         let (conn, _) = listener.accept().await.unwrap();
-        let conn = tokio_tcpmux::Mux::new(conn, tokio_tcpmux::Config::new(1, 1, 16192 as usize));
+        let mut conn = tokio_tcpmux::Mux::new(conn, tokio_tcpmux::Config::new(1, 1, 16192 as usize));
         let mut stream = conn.accept().await.unwrap();
         let mut buf = [0u8; 8092];
         let mut total = 0;
