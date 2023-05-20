@@ -4,6 +4,11 @@ A Tokio-compatible TCP multiplexing library with a focus on speed and reliabilit
 
 ![img](https://raw.githubusercontent.com/rob-maron/tokio-tcpmux/master/mux.png)
 
+## Benchmarks
+|       Implementation     |  Throughput (TCP)  |
+| ------------------------ | ------------------ |
+| **tokio-tcpmux**         | **3.6352 GiB/s**   |
+
 ## Example
 ```rust
 use tokio::{
