@@ -4,13 +4,6 @@ A Tokio-compatible TCP multiplexing library with a focus on speed and reliabilit
 
 ![img](https://raw.githubusercontent.com/rob-maron/tokio-tcpmux/master/mux.png)
 
-## Benchmarks
-|       Implementation     |  Throughput (TCP)  |
-| ------------------------ | ------------------ |
-| async-smux               | 1.0550 GiB/s       |
-| tokio-stream-multiplexor | 1.8388 GiB/s       |
-| **tokio-tcpmux**         | **3.6352 GiB/s**   |
-
 ## Example
 ```rust
 use tokio::{
