@@ -1,6 +1,6 @@
 # tokio-tcpmux
 
-A Tokio-compatible TCP multiplexing library with a focus on speed and reliability.
+A Tokio-compatible TCP multiplexing library with a focus on speed and reliability
 
 ![img](https://raw.githubusercontent.com/rob-maron/tokio-tcpmux/master/mux.png)
 
