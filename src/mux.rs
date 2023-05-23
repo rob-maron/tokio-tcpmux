@@ -311,7 +311,7 @@ impl Drop for Mux {
             let mut buf = BytesMut::with_capacity(8);
             buf.put_u64(Header::new(ControlMessage::Close, *stream.key(), 0).0);
 
-            self.outbound_sender.send(buf.freeze()).unwrap();
+            self.outbound_sender.send(buf.freeze());
         }
         self.join_handle_inbound.abort();
         self.join_handle_outbound.abort();
